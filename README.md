@@ -18,6 +18,7 @@ node tools/serve.mjs 3000      # 저장소 루트에서. 다른 위치라면 too
 | 경쟁 빈틈을 반영한 비교·FAQ | 페이지 안 — 궁금한 점 6행 · 비교 인포그래픽 · 정직한 맛 표기 |
 | 레퍼런스 질감 | `css/style.css` 맨 위 토큰 (소스101 톤 + 종이 결·아치 무대·눈금) |
 | 투명 PNG · 회전 루프 | `assets/bottle/` (아래) |
+| 상단 배너 | 페이지 맨 위 — 스토어 홈 프로모션 배너 원본(모바일 750×600 · PC 1920×400)을 WebP로 옮긴 `assets/img/top-banner.webp` · `top-banner-pc.webp`. 900px 미만은 가로 꽉 찬 모바일 그림, 그 이상은 카드형 PC 그림. 그림 안 글자는 한국어 그대로이고 언어 전환은 alt 문구만 바꿉니다 |
 | SVG 인터랙션 | 페이지 안 4곳 + `snippets/` 독립 코드 4개 — 「세 번이면 끓습니다」 냄비 스토리는 저울 표시창이 물 0→450g · 육수 0→50g 을 세고 눈금자·물결·불꽃이 스크롤에 맞춰 움직입니다(`js/main.js` 7번 구역) |
 | 행동심리 카피 | `index.html` · `i18n/` — 라벨·승인된 사실과 숫자만 쓰고 `tools/check_copy.py`로 점검 |
 
@@ -32,7 +33,7 @@ i18n/               ko.json(자동 추출) · ko.app.json(JS 문구·메타) · 
 data/config.json    구매 링크·가격·환불 배지·연락처·인증 유효기간 (값 null이면 숨김)
 data/reviews.json   후기 데이터 (지금은 '예시' 6건 — 아래 「후기」)
 assets/bottle/      bottle-front.png(투명) · bottle-turn.webp/.gif(루프) · turn/(뷰어 프레임 72장)
-assets/img · clips  연출 사진(WebP) · 연출 영상(MP4, 화면에 들어올 때만 재생)
+assets/img · clips  상단 배너 · 연출 사진(WebP) · 연출 영상(MP4, 화면에 들어올 때만 재생)
 snippets/           복붙용 SVG 인터랙션 4종 + index.html
 tools/              render_turn · export_turn · serve · check_copy · i18n_extract · i18n_check · i18n_build · test_tools
 ```
@@ -79,7 +80,9 @@ python3 tools/export_turn.py --frames-dir /tmp/turn-raw --out assets/bottle
 ## 자주 하는 수정과 점검
 
 - 가격·링크·연락처 → `data/config.json` · 후기 → `data/reviews.json` · 한국어 문구 → `index.html`(+ 번역 갱신)
+- 상단 배너를 바꿀 때 → 두 WebP 를 교체하고 `index.html` 의 `<img>`·`<source>` 의 width/height 를 실제 크기와 맞춥니다(`test_tools.py` 의 TopBanner 가 크기·비율·미리 불러오기 주소를 확인). 그림 안의 글자는 점검 도구가 읽지 못하니 눈으로 확인하세요.
 - 점검: `python3 tools/check_copy.py`(금지 표현·근거 없는 숫자·타 플랫폼 링크·영어/스페인어 후기 문구) · `python3 tools/test_tools.py`
 - 이 데모 페이지와 `snippets/` 는 검색엔진에 색인되지 않도록 `<meta name="robots" content="noindex">` 가 들어 있습니다. 실서비스에 올릴 때는 `index.html` 과 `snippets/*.html` 에서 지우세요.
 - 타사 브랜드명 금지 목록은 저장소에 두지 않습니다. `tools/banned_brands.local.txt`(한 줄에 하나, git 제외)를 만들면 `check_copy.py`가 함께 검사합니다.
 - 실제 병 자산으로 렌더까지 시험하려면 `S101_BOTTLE_BASE`(병 원본·띠 좌표 폴더)와 `S101_LABEL`(라벨 PNG)을 지정해 `test_tools.py`를 실행하세요(없으면 그 시험만 건너뜁니다).
+- 첫 화면이 로드 뒤에도 보이는지(제목·구매 버튼이 투명하게 남지 않는지) 보는 브라우저 시험(`HeroFirstPaint`)은 Playwright(Chromium)가 설치돼 있으면 실행되고 없으면 건너뜁니다(`pip install playwright && playwright install chromium`).

@@ -16,7 +16,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Nanum+Myeongjo:wght@400;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,500&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="preload" as="image" href="assets/bottle/turn/turn-000.webp" fetchpriority="high">
+<link rel="preload" as="image" href="assets/img/top-banner.webp" media="(max-width:899px)" fetchpriority="high">
+<link rel="preload" as="image" href="assets/img/top-banner-pc.webp" media="(min-width:900px)" fetchpriority="high">
+<link rel="preload" as="image" href="assets/bottle/turn/turn-000.webp">
 <link rel="stylesheet" href="css/style.css">
 <script>document.documentElement.className='js';setTimeout(function(){if(!window.S101_READY)document.documentElement.classList.remove('js')},4000)</script>
 </head>
@@ -49,6 +51,12 @@
 
 <!-- ───────── 1. 히어로 ───────── -->
 <section class="hero" id="top">
+  <figure class="topbanner">
+    <picture>
+      <source media="(min-width:900px)" srcset="assets/img/top-banner-pc.webp" width="1920" height="400">
+      <img src="assets/img/top-banner.webp" width="750" height="600" alt="소스101 국물·육수 — 오늘의 집밥, 맛있는 한 병으로. 육수 병 네 개와 전골 한 냄비" decoding="async" fetchpriority="high" data-ta="alt:hero.16">
+    </picture>
+  </figure>
   <div class="wrap hero__grid">
     <div class="hero__copy">
       <p class="kicker rv"><span>Korean Chicken Soup Base</span> · 330g</p>
@@ -80,7 +88,7 @@
         <div class="turntable" id="turntable" tabindex="0" role="group" aria-roledescription="360도 회전 보기"
              aria-label="닭한마리육수 330g 병 360도 보기. 끌어서 돌리거나 좌우 방향키를 누르세요." data-ta="aria-label:hero.13;aria-roledescription:hero.14">
           <img class="turntable__poster" src="assets/bottle/turn/turn-000.webp" width="344" height="1082"
-               alt="소스101 닭한마리육수 330g 병 정면" decoding="async" fetchpriority="high" data-ta="alt:hero.15">
+               alt="소스101 닭한마리육수 330g 병 정면" decoding="async" data-ta="alt:hero.15">
           <canvas class="turntable__cv" width="344" height="1082" aria-hidden="true"></canvas>
         </div>
         <div class="ruler" aria-hidden="true">

@@ -288,6 +288,148 @@ class StoryVars(unittest.TestCase):
         self.assertEqual(sorted(mine & sel_classes(outside)), [], '스토리 그림이 다른 구역 CSS 와 같은 이름을 씁니다')
         self.assertEqual(sorted(mine & tokens(html[:s0] + html[s1:])), [], '스토리 CSS 이름을 다른 구역 마크업이 씁니다')
 
+
+def keyframe_names(css):
+    css = re.sub(r'/\*.*?\*/', '', css, flags=re.S)
+    return re.findall(r'@keyframes\s+([\w-]+)', css)
+
+
+def animation_names(css):
+    css = re.sub(r'/\*.*?\*/', '', css, flags=re.S)
+    skip = {'none', 'infinite', 'forwards', 'backwards', 'both', 'normal', 'reverse', 'alternate', 'alternate-reverse', 'paused', 'running',
+            'ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear', 'step-start', 'step-end', 'initial', 'inherit', 'unset'}
+    names = set()
+    for value in re.findall(r'animation(?:-name)?\s*:\s*([^;}]+)', css):
+        for one in re.split(r',(?![^(]*\))', value):                                   # 괄호 안의 쉼표는 나누지 않는다
+            for tok in one.split():
+                if re.fullmatch(r'[A-Za-z_][\w-]*', tok) and tok not in skip:
+                    names.add(tok); break
+    return names
+
+
+class CssAnimations(unittest.TestCase):
+    def test_keyframes_names_are_unique(self):             # 같은 이름을 두 번 정의하면 뒤의 것이 이긴다 — 냄비 스토리의 rise 가 히어로 제목의 rise 를 덮어 제목이 사라진 사고(fb72d5c)를 막는다
+        css = (ROOT / 'css' / 'style.css').read_text(encoding='utf-8')
+        names = keyframe_names(css)
+        self.assertTrue(len(names) > 5, names)
+        self.assertEqual(sorted({n for n in names if names.count(n) > 1}), [], '같은 이름의 @keyframes 가 두 번 이상 있습니다')
+
+    def test_every_animation_uses_a_defined_keyframes(self):   # 이름 오타·삭제로 애니메이션이 조용히 안 돌아가는 일을 막는다
+        css = (ROOT / 'css' / 'style.css').read_text(encoding='utf-8')
+        self.assertEqual(sorted(animation_names(css) - set(keyframe_names(css))), [], '정의되지 않은 @keyframes 를 쓰는 animation 이 있습니다')
+
+    def test_duplicate_keyframes_check_catches_the_old_bug(self):   # 위 검사가 실제로 그 사고를 잡는지 — 사고 당시 CSS 조각으로 확인
+        broken = '@keyframes rise{to{transform:none}} .a{animation:rise 1s} @keyframes rise{0%{opacity:0}}'
+        names = keyframe_names(broken)
+        self.assertEqual([n for n in set(names) if names.count(n) > 1], ['rise'])
+        self.assertEqual(animation_names('.a{animation:rise 1s var(--ease) .1s forwards} .b{animation:spin var(--d) ease-in infinite, fade 2s cubic-bezier(.2, .8, .2, 1)}'), {'rise', 'spin', 'fade'})
+
+
+def webp_size(path):
+    b = pathlib.Path(path).read_bytes()
+    assert b[:4] == b'RIFF' and b[8:12] == b'WEBP', f'{path}: WebP 가 아닙니다'
+    kind = b[12:16]
+    if kind == b'VP8 ':
+        return int.from_bytes(b[26:28], 'little') & 0x3fff, int.from_bytes(b[28:30], 'little') & 0x3fff
+    if kind == b'VP8L':
+        bits = int.from_bytes(b[21:25], 'little')
+        return (bits & 0x3fff) + 1, ((bits >> 14) & 0x3fff) + 1
+    if kind == b'VP8X':
+        return int.from_bytes(b[24:27], 'little') + 1, int.from_bytes(b[27:30], 'little') + 1
+    raise AssertionError(f'{path}: 알 수 없는 WebP 형식 {kind!r}')
+
+
+class TopBanner(unittest.TestCase):
+    def setUp(self):
+        self.html = (ROOT / 'index.html').read_text(encoding='utf-8')
+        self.css = (ROOT / 'css' / 'style.css').read_text(encoding='utf-8')
+        pic = re.search(r'<figure class="topbanner">\s*<picture>(.*?)</picture>', self.html, re.S)
+        self.assertTrue(pic, '상단 배너(<figure class="topbanner"><picture>)를 index.html 에서 찾지 못했습니다')
+        src = re.search(r'<source media="\(min-width:(\d+)px\)" srcset="([^"]+)" width="(\d+)" height="(\d+)">', pic.group(1))
+        img = re.search(r'<img src="([^"]+)" width="(\d+)" height="(\d+)" alt="([^"]+)"', pic.group(1))
+        self.assertTrue(src and img, '배너의 <source media srcset width height> 또는 <img src width height alt> 형식이 바뀌었습니다')
+        self.pc = (src.group(2), int(src.group(3)), int(src.group(4))); self.pc_min = int(src.group(1))
+        self.mo = (img.group(1), int(img.group(2)), int(img.group(3))); self.alt = img.group(4)
+
+    def test_declared_sizes_match_the_real_files(self):    # width/height 가 실제 파일과 다르면 배너 자리가 어긋나 화면이 밀린다
+        for path, w, h in (self.mo, self.pc):
+            self.assertEqual(webp_size(ROOT / path), (w, h), path)
+
+    def test_css_aspect_ratios_match_the_files(self):      # CSS 가 미리 잡아 두는 비율이 두 그림의 실제 비율과 같아야 한다
+        (_, mw, mh), (_, pw, ph) = self.mo, self.pc
+        base = re.search(r'\.topbanner img\{[^}]*aspect-ratio:(\d+)/(\d+)', self.css)
+        wide = re.search(r'min-width:(\d+)px\)\{\s*\.topbanner\{.*?\.topbanner img\{aspect-ratio:(\d+)/(\d+)\}', self.css, re.S)
+        self.assertEqual(int(base.group(1)) * mh, int(base.group(2)) * mw)
+        self.assertEqual(int(wide.group(2)) * ph, int(wide.group(3)) * pw)
+        self.assertEqual(int(wide.group(1)), self.pc_min, '그림을 바꾸는 너비(<source media>)와 CSS 카드 전환 너비가 다릅니다')
+
+    def test_head_preloads_match_the_picture_sources(self):   # 미리 불러오는 그림이 실제로 그려지는 그림과 같아야 대역폭이 낭비되지 않는다
+        pre = re.findall(r'<link rel="preload" as="image" href="(assets/img/top-banner[^"]*)" media="\(([a-z-]+):(\d+)px\)"', self.html)
+        self.assertEqual(sorted(pre), sorted([(self.mo[0], 'max-width', str(self.pc_min - 1)), (self.pc[0], 'min-width', str(self.pc_min))]))
+
+    def test_alt_text_is_translated_and_has_no_health_claims(self):   # 안내 문구는 번역 키가 있어야 하고, 이미지에 없는 효능을 말하지 않는다
+        self.assertRegex(self.html, r'alt="' + re.escape(self.alt) + r'"[^>]*data-ta="alt:(hero\.\d+)"')
+        key = re.search(r'alt="' + re.escape(self.alt) + r'"[^>]*data-ta="alt:(hero\.\d+)"', self.html).group(1)
+        for lang in ('ko', 'en', 'es'):
+            self.assertIn(key, json.loads((ROOT / 'i18n' / f'{lang}.json').read_text(encoding='utf-8')), f'{lang}.json 에 {key} 가 없습니다')
+        self.assertFalse(check_copy.check_text('배너 안내', self.alt))
+        self.assertFalse(check_copy.check_numbers('배너 안내', self.alt))
+
+
+class HeroFirstPaint(unittest.TestCase):
+    """브라우저로만 잡히는 회귀: 첫 화면이 로드 뒤에도 보이는가. 제목이 투명하게 끝나거나(fb72d5c, keyframes 이름 충돌) 구매 버튼이
+    스크롤 전까지 투명하게 남는(배너가 밀어 낸 등장 문턱) 사고를 막는다. Playwright(Chromium)가 없으면 건너뛴다."""
+    @classmethod
+    def setUpClass(cls):
+        try:
+            from playwright.sync_api import sync_playwright
+            cls.pw = sync_playwright().start(); cls.browser = cls.pw.chromium.launch()
+        except Exception as e:                                # 설치 안 됨 · 브라우저 없음
+            raise unittest.SkipTest(f'Playwright(Chromium) 없음 — pip install playwright && playwright install chromium ({type(e).__name__})')
+        cls.port = free_port()
+        cls.p = subprocess.Popen(['node', str(HERE / 'serve.mjs'), str(cls.port)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        for _ in range(50):
+            try:
+                socket.create_connection(('127.0.0.1', cls.port), 0.2).close(); break
+            except OSError:
+                time.sleep(0.1)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.p.terminate(); cls.p.wait(5); cls.browser.close(); cls.pw.stop()
+
+    def first_screen(self, width, height, **kw):
+        ctx = self.browser.new_context(viewport={'width': width, 'height': height}, **kw)
+        try:
+            page = ctx.new_page(); errors = []
+            page.on('pageerror', lambda e: errors.append(str(e)))                 # 외부 글꼴 등 네트워크 오류는 세지 않는다
+            page.goto(f'http://127.0.0.1:{self.port}/', wait_until='domcontentloaded'); page.wait_for_timeout(3500)     # 제목 1.45s · 등장 최대 1.2s
+            state = page.evaluate("""() => ({
+                title: [...document.querySelectorAll('.hero__title .ln>span')].map(s => [getComputedStyle(s).opacity, getComputedStyle(s).transform]),
+                rv: [...document.querySelectorAll('#top .rv')].map(e => getComputedStyle(e).opacity),
+                banner: (i => [i.complete && i.naturalWidth > 0, i.currentSrc.split('/').pop()])(document.querySelector('.topbanner img')),
+                overflow: document.documentElement.scrollWidth - innerWidth })""")
+            return state, errors
+        finally:
+            ctx.close()
+
+    def check(self, width, height, banner, **kw):
+        state, errors = self.first_screen(width, height, **kw)
+        self.assertEqual(errors, [])
+        self.assertEqual(len(state['title']), 2)
+        for opacity, transform in state['title']:
+            self.assertEqual(opacity, '1', '히어로 제목이 투명하게 끝났습니다'); self.assertIn(transform, ('none', 'matrix(1, 0, 0, 1, 0, 0)'))
+        self.assertTrue(state['rv'] and all(o == '1' for o in state['rv']), f"히어로의 등장 요소가 투명하게 남았습니다: {state['rv']}")
+        self.assertEqual(state['banner'], [True, banner])
+        self.assertLessEqual(state['overflow'], 0, '가로 넘침')
+
+    def test_phone_first_screen(self):
+        self.check(393, 852, 'top-banner.webp', device_scale_factor=2, is_mobile=True, has_touch=True)
+
+    def test_laptop_first_screen(self):                    # 노트북 높이에서는 배너 때문에 구매 버튼이 등장 문턱(-8%) 아래로 밀린다
+        self.check(1440, 780, 'top-banner-pc.webp')
+
+
 class ConfigDefaults(unittest.TestCase):
     def test_js_defaults_match_config_json(self):          # 설정을 못 불러올 때(file://) 쓰는 기본값이 config.json 과 어긋나지 않게
         js = (ROOT / 'js' / 'main.js').read_text(encoding='utf-8')

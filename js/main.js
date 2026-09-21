@@ -191,6 +191,8 @@ const reveal = new IntersectionObserver(es => es.forEach(e => {
   e.target.classList.add('is-in'); reveal.unobserve(e.target);
 }), { rootMargin: '0px 0px -8% 0px', threshold: .08 });
 $$('.rv,[data-draw]').forEach(el => (RM ? el.classList.add('is-in') : reveal.observe(el)));
+/* 히어로 문구는 화면 안이든 밖이든 처음부터 드러낸다 — 상단 배너 때문에 버튼이 관찰 문턱(-8%) 아래로 밀려도 스크롤 전까지 투명하게 남지 않게 */
+requestAnimationFrame(() => requestAnimationFrame(() => $$('#top .rv').forEach(el => el.classList.add('is-in'))));
 /* 보험: 관찰자 콜백이 늦게 와도 이미 화면에 들어온 요소는 드러낸다 */
 const revealNow = () => $$('.rv:not(.is-in),[data-draw]:not(.is-in)').forEach(el => {
   const r = el.getBoundingClientRect();

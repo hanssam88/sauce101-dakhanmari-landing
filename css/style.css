@@ -91,11 +91,20 @@ h1,h2,h3,p,figure,dl,dd,ul,ol{margin:0}
 @media(min-width:960px){.bar__in{gap:22px}.bar__nav{display:flex}.lang{margin-left:0}}
 
 /* ── 히어로 ── */
-.hero{position:relative;padding:calc(64px + clamp(28px,6vw,68px)) 0 clamp(64px,8vw,110px);overflow:clip}
+.hero{position:relative;padding:64px 0 clamp(64px,8vw,110px);overflow:clip}
 .hero::before{content:"";position:absolute;right:-18%;top:-16%;width:min(920px,86vw);aspect-ratio:1;border-radius:50%;
   background:radial-gradient(closest-side,rgba(255,253,243,.95),rgba(255,253,243,0));pointer-events:none}
 .hero__grid{position:relative;display:grid;gap:clamp(40px,6vw,72px);align-items:center}
 @media(min-width:960px){.hero__grid{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr)}}
+/* 상단 배너 — 스토어 홈 배너(모바일 5:4 · PC 24:5). 모바일은 상단 바 아래 가로 꽉, PC는 둥근 카드 */
+.topbanner{position:relative;margin:0 0 clamp(28px,6vw,68px);background:var(--paper-2);box-shadow:0 1px 0 var(--line-2)}
+.topbanner picture{display:block}
+.topbanner img{display:block;width:100%;height:auto;aspect-ratio:5/4;object-fit:cover}
+@media(min-width:900px){
+  .topbanner{width:min(var(--wrap),100% - 2*var(--gut));margin:12px auto 36px;border-radius:var(--r);overflow:hidden;
+    box-shadow:0 0 0 1px var(--line-2),0 30px 56px -34px rgba(29,42,24,.45)}
+  .topbanner img{aspect-ratio:24/5}
+}
 .kicker{font:italic 500 18px/1 var(--latin);color:var(--olive-deep);margin-bottom:22px;letter-spacing:.01em}
 .kicker span{font-style:italic}
 .hero__title{font:800 clamp(60px,15.2vw,100px)/1.03 var(--serif);letter-spacing:-.05em;margin-bottom:30px}
@@ -308,8 +317,8 @@ figcaption{font:400 12.5px/1.5 var(--sans);color:var(--ink-3)}
 @keyframes bob{50%{transform:translateY(3px) rotate(3deg)}}
 
 .bubs{opacity:var(--boil)}
-.bub{fill:rgba(255,255,255,.16);stroke:rgba(255,251,236,.95);stroke-width:2;transform-box:fill-box;transform-origin:center;animation:rise var(--d) ease-in var(--t) infinite}
-@keyframes rise{0%{transform:translateY(0) scale(.55);opacity:0}15%{opacity:.95}100%{transform:translateY(-92px) scale(1.15);opacity:0}}
+.bub{fill:rgba(255,255,255,.16);stroke:rgba(255,251,236,.95);stroke-width:2;transform-box:fill-box;transform-origin:center;animation:bubble var(--d) ease-in var(--t) infinite}
+@keyframes bubble{0%{transform:translateY(0) scale(.55);opacity:0}15%{opacity:.95}100%{transform:translateY(-92px) scale(1.15);opacity:0}}
 
 .pot-line path{fill:none;stroke:var(--ink);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
 .pot-hl{fill:none;stroke:rgba(255,255,255,.8);stroke-width:5;stroke-linecap:round}
