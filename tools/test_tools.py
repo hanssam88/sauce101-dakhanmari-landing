@@ -247,6 +247,47 @@ class I18nRuntime(unittest.TestCase):
             self.assertEqual(sorted(k for k in keys if k not in data[lang]), [], lang)
 
 
+class StoryVars(unittest.TestCase):
+    def test_story_js_and_css_agree_on_variables(self):    # JS 가 넣는 변수와 CSS 가 읽는 변수가 어긋나 장면 일부가 멈추는 일을 막는다
+        js = (ROOT / 'js' / 'main.js').read_text(encoding='utf-8')
+        css = (ROOT / 'css' / 'style.css').read_text(encoding='utf-8')
+        call = re.search(r'setVars\(\{(.*?)\}\);', js, re.S).group(1)
+        from_js = set(re.findall(r'\b(\w+):', call))
+        defaults = set(re.findall(r'--(\w+):', re.search(r'\.story__panel\{(--lv:.*?)\}', css).group(1)))
+        used = set(re.findall(r'var\(--(\w+)', css))
+        self.assertTrue(len(from_js) > 15, from_js)
+        self.assertEqual(sorted(from_js - defaults), [], 'JS 가 넣지만 CSS 기본값이 없는 변수')
+        self.assertEqual(sorted(defaults - from_js), [], 'CSS 기본값만 있고 JS 가 넣지 않는 변수')
+        self.assertEqual(sorted(defaults - used), [], 'CSS 가 읽지 않는 변수')
+
+    def test_story_svg_has_every_element_the_script_drives(self):   # main.js 가 찾는 요소가 마크업에 있는지
+        html = (ROOT / 'index.html').read_text(encoding='utf-8')
+        js = (ROOT / 'js' / 'main.js').read_text(encoding='utf-8')
+        block = js[js.index('── 7. 냄비 스토리'):js.index('── 8. 계산기')]
+        sels = sorted(set(re.findall(r"\$\$?\('\.([\w-]+)', svg\)", block)))
+        self.assertTrue(sels, '스크립트가 찾는 요소를 하나도 읽지 못했습니다')
+        for sel in sels:
+            self.assertTrue(re.search(r'class="[^"]*\b' + re.escape(sel) + r'\b', html), f'index.html 에 .{sel} 가 없습니다')
+        self.assertEqual(len(re.findall(r'class="rpi"', html)), 3)               # 재료 착수 물결 3개
+        self.assertEqual(len(re.findall(r'class="ing ing--\d"', html)), 3)       # 재료 3개
+
+    def test_story_class_names_do_not_collide_with_other_sections(self):   # 스토리 그림의 이름이 계산기·히어로 같은 다른 구역 규칙을 덮어쓰는 사고(.gb1 · .ruler)를 막는다
+        css = (ROOT / 'css' / 'style.css').read_text(encoding='utf-8')
+        html = (ROOT / 'index.html').read_text(encoding='utf-8')
+        a = css.index('/* ── 냄비 스토리 그림'); b = css.index('/* ── 계산기(저울 패널) ── */')
+        block, outside = css[a:b], css[:a] + css[b:]
+
+        def sel_classes(text):
+            text = re.sub(r'/\*.*?\*/', '', text, flags=re.S)
+            for _ in range(3):
+                text = re.sub(r'\{[^{}]*\}', '{}', text)                           # 선언·중첩을 지우고 선택자만 남긴다
+            return set(re.findall(r'\.([A-Za-z_][\w-]*)', text))
+        tokens = lambda h: {c for m in re.findall(r'class="([^"]*)"', h) for c in m.split()}
+        s0 = html.index('<svg class="story__svg"'); s1 = html.index('</svg>', s0) + 6
+        mine = (sel_classes(block) | tokens(html[s0:s1])) - {'story', 'story__svg', 'is-off'}      # 구역 이름 자체는 함께 쓴다
+        self.assertEqual(sorted(mine & sel_classes(outside)), [], '스토리 그림이 다른 구역 CSS 와 같은 이름을 씁니다')
+        self.assertEqual(sorted(mine & tokens(html[:s0] + html[s1:])), [], '스토리 CSS 이름을 다른 구역 마크업이 씁니다')
+
 class ConfigDefaults(unittest.TestCase):
     def test_js_defaults_match_config_json(self):          # 설정을 못 불러올 때(file://) 쓰는 기본값이 config.json 과 어긋나지 않게
         js = (ROOT / 'js' / 'main.js').read_text(encoding='utf-8')

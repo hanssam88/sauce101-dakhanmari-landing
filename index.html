@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
 <title>소스101 닭한마리육수 — 한 병, 여섯 냄비</title>
 <meta name="description" content="육수 50g에 물 450g이면 2인분 한 냄비. 국내산 닭으로 우려낸 깊고 깔끔한 닭한마리육수 330g, 한 병으로 6번(12인분).">
 <meta name="theme-color" content="#22321B">
@@ -248,47 +249,110 @@
     <div class="story__stick">
       <div class="story__panel">
         <div class="arch__grain" aria-hidden="true"></div>
+        <div class="story__glow" aria-hidden="true"></div>
         <svg class="story__svg" id="storySvg" viewBox="0 0 480 400" role="img"
              aria-label="사용법 일러스트: 병을 흔들고, 물 450g에 육수 50g을 넣고, 닭과 채소를 넣어 끓입니다." data-ta="aria-label:how.13">
           <defs>
             <clipPath id="potClip"><path d="M97 176H383V286C383 324 352 348 312 348H168C128 348 97 324 97 286Z"/></clipPath>
+            <clipPath id="waterBody"><rect x="60" y="13" width="360" height="260"/></clipPath>
+            <clipPath id="bottleClip"><path d="M28 13v6c-5 3-8 6-8 12v21a5 5 0 0 0 5 5h14a5 5 0 0 0 5-5V31c0-6-3-9-8-12v-6z"/></clipPath>
             <linearGradient id="gWater" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="gw1"/><stop offset="1" class="gw2"/></linearGradient>
-            <linearGradient id="gBroth" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="gb1"/><stop offset="1" class="gb2"/></linearGradient>
+            <linearGradient id="gBroth" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="gs1"/><stop offset="1" class="gs2"/></linearGradient>
+            <radialGradient id="gCloud"><stop offset="0" class="gc1"/><stop offset=".55" class="gc2"/><stop offset="1" class="gc3"/></radialGradient>
+            <radialGradient id="gGlow"><stop offset="0" class="gg1"/><stop offset="1" class="gg2"/></radialGradient>
+            <linearGradient id="gFlame" x1="0" y1="1" x2="0" y2="0"><stop offset="0" class="gf1"/><stop offset="1" class="gf2"/></linearGradient>
           </defs>
-          <ellipse class="s-shadow" cx="240" cy="366" rx="150" ry="11"/>
+          <ellipse class="s-glow" cx="240" cy="326" rx="236" ry="124" fill="url(#gGlow)"/>
+          <ellipse class="s-shadow" cx="240" cy="388" rx="176" ry="8"/>
+          <!-- 화구 · 불꽃 -->
+          <g class="burner"><rect x="112" y="370" width="256" height="7" rx="3.5"/><path d="M176 348V370M304 348V370"/></g>
+          <g class="flames"><g class="fl fl--1" style="--fx:138px"><g class="fl-f"><path d="M129.0 370C129.0 355.2 135.5 349.2 138 340.3C140.5 349.2 147.0 355.2 147.0 370Z"/><path class="fl-in" d="M133.4 370C133.4 360.8 135.5 357.1 138 351.6C140.5 357.1 142.6 360.8 142.6 370Z"/></g></g><g class="fl fl--2" style="--fx:160px"><g class="fl-f"><path d="M151.0 370C151.0 357.4 157.5 352.3 160 344.7C162.5 352.3 169.0 357.4 169.0 370Z"/><path class="fl-in" d="M155.4 370C155.4 362.2 157.5 359.0 160 354.3C162.5 359.0 164.6 362.2 164.6 370Z"/></g></g><g class="fl fl--3" style="--fx:192px"><g class="fl-f"><path d="M183.0 370C183.0 357.5 189.5 352.5 192 345.0C194.5 352.5 201.0 357.5 201.0 370Z"/><path class="fl-in" d="M187.4 370C187.4 362.2 189.5 359.1 192 354.5C194.5 359.1 196.6 362.2 196.6 370Z"/></g></g><g class="fl fl--4" style="--fx:216px"><g class="fl-f"><path d="M207.0 370C207.0 357.5 213.5 352.5 216 345.0C218.5 352.5 225.0 357.5 225.0 370Z"/><path class="fl-in" d="M211.4 370C211.4 362.2 213.5 359.1 216 354.5C218.5 359.1 220.6 362.2 220.6 370Z"/></g></g><g class="fl fl--1" style="--fx:240px"><g class="fl-f"><path d="M231.0 370C231.0 357.5 237.5 352.5 240 345.0C242.5 352.5 249.0 357.5 249.0 370Z"/><path class="fl-in" d="M235.4 370C235.4 362.2 237.5 359.1 240 354.5C242.5 359.1 244.6 362.2 244.6 370Z"/></g></g><g class="fl fl--2" style="--fx:264px"><g class="fl-f"><path d="M255.0 370C255.0 357.5 261.5 352.5 264 345.0C266.5 352.5 273.0 357.5 273.0 370Z"/><path class="fl-in" d="M259.4 370C259.4 362.2 261.5 359.1 264 354.5C266.5 359.1 268.6 362.2 268.6 370Z"/></g></g><g class="fl fl--3" style="--fx:288px"><g class="fl-f"><path d="M279.0 370C279.0 357.5 285.5 352.5 288 345.0C290.5 352.5 297.0 357.5 297.0 370Z"/><path class="fl-in" d="M283.4 370C283.4 362.2 285.5 359.1 288 354.5C290.5 359.1 292.6 362.2 292.6 370Z"/></g></g><g class="fl fl--4" style="--fx:320px"><g class="fl-f"><path d="M311.0 370C311.0 357.4 317.5 352.3 320 344.7C322.5 352.3 329.0 357.4 329.0 370Z"/><path class="fl-in" d="M315.4 370C315.4 362.2 317.5 359.0 320 354.3C322.5 359.0 324.6 362.2 324.6 370Z"/></g></g><g class="fl fl--1" style="--fx:342px"><g class="fl-f"><path d="M333.0 370C333.0 355.2 339.5 349.2 342 340.3C344.5 349.2 351.0 355.2 351.0 370Z"/><path class="fl-in" d="M337.4 370C337.4 360.8 339.5 357.1 342 351.6C344.5 357.1 346.6 360.8 346.6 370Z"/></g></g></g>
+          <!-- 냄비(유리처럼 속이 비친다) -->
+          <path class="pot-glass" d="M97 176H383V286C383 324 352 348 312 348H168C128 348 97 324 97 286Z"/>
           <g clip-path="url(#potClip)">
-            <g class="water"><path d="M-160 10c30-9 60 9 90 0s60-9 90 0 60 9 90 0 60-9 90 0 60 9 90 0 60-9 90 0 60 9 90 0 60-9 90 0V240H-160Z" fill="url(#gWater)"/></g>
-            <g class="broth"><path d="M-160 10c30-9 60 9 90 0s60-9 90 0 60 9 90 0 60-9 90 0 60 9 90 0 60-9 90 0 60 9 90 0 60-9 90 0V240H-160Z" fill="url(#gBroth)"/></g>
+            <g class="surf">
+              <g class="wv wv--w"><path d="M-160 10c30-9 60 9 90 0s60-9 90 0 60 9 90 0 60-9 90 0 60 9 90 0 60-9 90 0 60 9 90 0 60-9 90 0V240H-160Z" fill="url(#gWater)"/><path class="crest" d="M-160 10c30-9 60 9 90 0s60-9 90 0 60 9 90 0 60-9 90 0 60 9 90 0 60-9 90 0 60 9 90 0 60-9 90 0"/></g>
+              <g clip-path="url(#waterBody)"><circle class="cloud" cx="294" cy="14" r="176" fill="url(#gCloud)"/></g>
+              <g class="bro"><g class="wv wv--b"><path d="M-160 10c30-9 60 9 90 0s60-9 90 0 60 9 90 0 60-9 90 0 60 9 90 0 60-9 90 0 60 9 90 0 60-9 90 0V240H-160Z" fill="url(#gBroth)"/><path class="crest crest--b" d="M-160 10c30-9 60 9 90 0s60-9 90 0 60 9 90 0 60-9 90 0 60 9 90 0 60-9 90 0 60 9 90 0 60-9 90 0"/></g></g>
+            </g>
           </g>
           <!-- 재료 -->
-          <g class="ing ing--1"><circle cx="202" cy="211" r="16"/><path d="M191 222l-17 17"/><circle cx="170" cy="243" r="4"/><circle cx="177" cy="250" r="4"/></g>
-          <g class="ing ing--2"><ellipse cx="268" cy="222" rx="24" ry="15" transform="rotate(-14 268 222)"/><path d="M256 220h.01M270 226h.01M279 216h.01"/></g>
-          <g class="ing ing--3"><path d="M226 196l44 22M232 208l38 14"/></g>
-          <!-- 냄비 선 -->
+          <g class="ings">
+            <g class="ing ing--1"><g class="bob bob--1">
+              <path class="bone-o" d="M12-13L31-30"/><path class="bone-i" d="M12-13L31-30"/>
+              <circle class="knob" cx="33" cy="-33" r="5.2"/><circle class="knob" cx="39" cy="-26" r="5.2"/>
+              <path class="meat" d="M12-13C4-23-14-23-24-9-34 6-28 24-10 25 6 26 20 12 12-13z"/>
+              <path class="hl" d="M-19-2c2-7 8-11 15-11"/>
+            </g></g>
+            <g class="ing ing--2"><g class="bob bob--2">
+              <path class="spud" d="M-23 2c-2-12 10-19 22-18 13 1 24 8 23 19-1 12-14 18-26 16-10-2-18-7-19-17z"/>
+              <path class="eye" d="M-9-4h.01M6 6h.01M13-6h.01M-2 9h.01"/><path class="hl" d="M-15-7c3-4 8-6 13-5"/>
+            </g></g>
+            <g class="ing ing--3"><g class="bob bob--3">
+              <path class="leaf" d="M-30 8c13-13 30-15 54-7"/><path class="leaf leaf--b" d="M-25-2c13-11 27-15 47-11"/>
+              <circle class="ring" cx="-8" cy="14" r="5.8"/><circle class="ring" cx="6" cy="17" r="5.8"/><circle class="ring" cx="19" cy="12" r="5.8"/>
+            </g></g>
+          </g>
+          <!-- 재료가 국물에 잠긴 듯 보이게 덮는 얇은 막 -->
+          <g clip-path="url(#potClip)"><g class="surf"><g class="veil"><g class="wv wv--b"><path d="M-160 10c30-9 60 9 90 0s60-9 90 0 60 9 90 0 60-9 90 0 60 9 90 0 60-9 90 0 60 9 90 0 60-9 90 0V240H-160Z" fill="url(#gBroth)"/></g></g></g></g>
+          <g class="bubs" clip-path="url(#potClip)"><circle class="bub" style="--d:2.6s;--t:0.0s" cx="132" cy="318" r="5.4"/><circle class="bub" style="--d:2.1s;--t:0.7s" cx="168" cy="330" r="4.2"/><circle class="bub" style="--d:3.0s;--t:1.3s" cx="204" cy="322" r="6.4"/><circle class="bub" style="--d:2.3s;--t:0.3s" cx="240" cy="332" r="4.4"/><circle class="bub" style="--d:2.8s;--t:1.0s" cx="276" cy="324" r="5.8"/><circle class="bub" style="--d:2.0s;--t:1.6s" cx="312" cy="330" r="3.8"/><circle class="bub" style="--d:2.5s;--t:0.5s" cx="348" cy="320" r="5.0"/><circle class="bub" style="--d:1.8s;--t:1.9s" cx="222" cy="336" r="3.4"/></g>
+          <!-- 냄비 선 · 유리 하이라이트 -->
           <g class="pot-line">
             <path d="M97 176H383V286C383 324 352 348 312 348H168C128 348 97 324 97 286Z"/>
             <path d="M84 176H396"/>
             <path d="M97 200H66a13 13 0 0 0 0 38H97"/>
             <path d="M383 200h31a13 13 0 0 1 0 38h-31"/>
           </g>
+          <path class="pot-hl" d="M114 198v70c0 15 6 27 15 35"/><path class="pot-hl pot-hl--s" d="M366 199v16"/>
+          <!-- 물높이 눈금자 -->
+          <g class="gauge"><path class="rl-axis" d="M436 230.7V348"/><path class="tk" d="M436 334.7h8"/><path class="tk tk--on" style="--t:0.072" d="M436 334.7h8"/><path class="tk" d="M436 321.7h8"/><path class="tk tk--on" style="--t:0.183" d="M436 321.7h8"/><path class="tk" d="M436 308.7h13"/><path class="tk tk--on" style="--t:0.294" d="M436 308.7h13"/><path class="tk" d="M436 295.7h8"/><path class="tk tk--on" style="--t:0.406" d="M436 295.7h8"/><path class="tk" d="M436 282.7h8"/><path class="tk tk--on" style="--t:0.517" d="M436 282.7h8"/><path class="tk" d="M436 269.7h13"/><path class="tk tk--on" style="--t:0.628" d="M436 269.7h13"/><path class="tk" d="M436 256.7h8"/><path class="tk tk--on" style="--t:0.739" d="M436 256.7h8"/><path class="tk" d="M436 243.7h8"/><path class="tk tk--on" style="--t:0.850" d="M436 243.7h8"/><path class="tk" d="M436 230.7h13"/><path class="tk tk--on" style="--t:0.961" d="M436 230.7h13"/>
+            <path class="rl-mark" d="M0 0l-11-5.5v11z"/></g>
           <!-- 김 -->
-          <g class="steam"><path d="M196 152c-12-18 12-24 0-42s12-24 0-42"/><path d="M240 152c-12-18 12-24 0-42s12-24 0-42"/><path d="M284 152c-12-18 12-24 0-42s12-24 0-42"/></g>
-          <!-- 붓는 줄기 -->
-          <path class="stream" pathLength="1" d="M340 121C326 142 302 170 294 224"/>
-          <!-- 병 -->
-          <g class="bottle">
-            <g class="bottle__in">
-              <rect x="27" y="5" width="10" height="8" rx="1.5" class="b-cap"/>
-              <path d="M28 13v6c-5 3-8 6-8 12v21a5 5 0 0 0 5 5h14a5 5 0 0 0 5-5V31c0-6-3-9-8-12v-6z" class="b-body"/>
-              <rect x="20" y="34" width="24" height="18" class="b-label"/>
-              <rect x="20" y="45" width="24" height="7" class="b-label2"/>
-              <path d="M24 39h16" class="b-line"/>
-            </g>
+          <g class="steam"><path style="--i:0" d="M168 168c-9-7.5 9-18.0 0-30.0s9-18.0 0-30.0"/><path style="--i:1" d="M204 168c-9-10.5 9-25.2 0-42.0s9-25.2 0-42.0"/><path style="--i:2" d="M240 168c-9-12.2 9-29.4 0-49.0s9-29.4 0-49.0"/><path style="--i:3" d="M276 168c-9-10.2 9-24.6 0-41.0s9-24.6 0-41.0"/><path style="--i:4" d="M312 168c-9-7.2 9-17.4 0-29.0s9-17.4 0-29.0"/></g>
+          <!-- 수도꼭지 · 물줄기 -->
+          <g class="tap">
+            <path class="pipe-o" d="M-16 66H112Q138 66 138 92V104"/><path class="pipe-i" d="M-16 66H112Q138 66 138 92V104"/>
+            <rect class="tip" x="129" y="102" width="18" height="9" rx="3"/>
+            <g class="knob-t"><path d="M70 58V47"/><path d="M57 46h26"/></g>
           </g>
-          <!-- 수치 표식 -->
-          <g class="tag-svg tag-svg--a"><rect x="368" y="14" width="74" height="30" rx="15"/><text x="405" y="34" text-anchor="middle">50g</text></g>
-          <g class="tag-svg tag-svg--b"><rect x="368" y="248" width="86" height="30" rx="15"/><text x="411" y="268" text-anchor="middle">450g</text></g>
+          <rect class="tapstream" x="135" y="110" width="6" height="240" rx="3"/>
+          <!-- 잔물결 -->
+          <g class="rips">
+            <g class="rg rg--tap"><ellipse class="rp" rx="34" ry="6.5"/><ellipse class="rp rp--2" rx="34" ry="6.5"/></g>
+            <g class="rg rg--pour"><ellipse class="rp" rx="30" ry="6"/><ellipse class="rp rp--2" rx="30" ry="6"/></g>
+            <ellipse class="rpi" style="--ix:190px" rx="40" ry="7"/><ellipse class="rpi" style="--ix:294px" rx="40" ry="7"/><ellipse class="rpi" style="--ix:242px" rx="40" ry="7"/>
+          </g>
+          <!-- 붓는 줄기 -->
+          <path class="stream" pathLength="1" d="M340 123C326 144 302 172 294 231"/>
+          <path class="stream stream--hl" pathLength="1" d="M339 123C325 144 301 172 293 231"/>
+          <g class="splash"><circle cx="286" cy="226" r="2.6"/><circle cx="302" cy="224" r="2.2"/><circle cx="294" cy="220" r="2"/></g>
+          <!-- 흔들 때 생기는 선 -->
+          <g class="shk-lines"><path d="M190 74v30M181 86v26M290 74v30M299 86v26"/></g>
+          <!-- 병 -->
+          <g class="bottle"><g class="bottle__in">
+            <path class="b-glass" d="M28 13v6c-5 3-8 6-8 12v21a5 5 0 0 0 5 5h14a5 5 0 0 0 5-5V31c0-6-3-9-8-12v-6z"/>
+            <g clip-path="url(#bottleClip)">
+              <rect class="bl bl--mid" x="19" y="22" width="26" height="37"/>
+              <rect class="bl bl--top" x="19" y="22" width="26" height="6"/>
+              <rect class="bl bl--low" x="19" y="49" width="26" height="10"/>
+              <rect class="bl bl--mix" x="19" y="22" width="26" height="37"/>
+              <g class="bbub"><circle cx="26" cy="41" r="1.5"/><circle cx="34" cy="47" r="1.2"/><circle cx="37" cy="30" r="1.4"/></g>
+            </g>
+            <rect class="b-cap" x="27" y="5" width="10" height="8" rx="1.5"/>
+            <path class="b-outline" d="M28 13v6c-5 3-8 6-8 12v21a5 5 0 0 0 5 5h14a5 5 0 0 0 5-5V31c0-6-3-9-8-12v-6z"/>
+            <rect class="b-label" x="20" y="35" width="24" height="9"/><rect class="b-label2" x="20" y="41" width="24" height="3"/>
+            <path class="b-hl" d="M23.5 25v8"/>
+          </g></g>
+          <!-- 저울 표시창: 물 0→450g, 영점 후 육수 0→50g -->
+          <g class="ro">
+            <rect class="ro-bg" x="172" y="14" width="136" height="48" rx="15"/>
+            <g class="ro-ico ro-ico--w"><path d="M188 26c4 4.5 6.5 8 6.5 11.5a6.5 6.5 0 0 1-13 0c0-3.500 2.500-7 6.500-11.500z"/></g>
+            <g class="ro-ico ro-ico--b"><path d="M183.500 24h6v4h-6zM184 28v3c-2.500 1.500-4 3-4 6v7.500a2.500 2.500 0 0 0 2.500 2.500h7a2.500 2.500 0 0 0 2.500-2.500V37c0-3-1.500-4.500-4-6v-3"/></g>
+            <text class="ro-n" x="282" y="46" text-anchor="end">0</text><text class="ro-u" x="285" y="46">g</text>
+            <rect class="ro-track" x="180" y="53" width="120" height="3" rx="1.500"/><rect class="ro-bar" x="180" y="53" width="120" height="3" rx="1.500"/>
+          </g>
         </svg>
+        <div class="story__dots" aria-hidden="true"><i></i><i></i><i></i></div>
         <p class="story__cap mono" aria-hidden="true"><span data-cap="0" data-t="how.3">병을 흔든다</span><span data-cap="1" data-t="how.4">물 450g · 육수 50g</span><span data-cap="2" data-t="how.5">재료를 넣고 끓인다</span></p>
       </div>
     </div>

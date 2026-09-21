@@ -325,21 +325,55 @@ class Turntable {
 const turntable = $('#turntable');
 if (turntable) new Turntable(turntable);
 
-/* ── 7. 냄비 스토리 — 스크롤 위치가 냄비 상태(--lv 물높이 · --mix 육수색 · --tilt 병 기울기 …)를 정한다 ── */
+/* ── 7. 냄비 스토리 — 스크롤 위치(p 0→1)가 장면을 정한다 ──
+   ① 병을 흔든다(층이 섞인다) ② 수도에서 물 450g(눈금자가 켜진다) → 저울 영점 → 병을 옮겨 육수 50g ③ 재료를 넣고 불을 켜 끓인다.
+   저울 표시창이 물 0→450g, 육수 0→50g 을 센다. 값은 모두 p 에서 계산해 .story__panel 의 CSS 변수와 몇 개의 transform 으로 넣는다. */
 const story = $('#how');
-if (story) {
-  const svg = $('#storySvg'), steps = $$('.step', story), steps0 = $('.story__steps', story);
-  const setVars = (o) => { for (const k in o) svg.style.setProperty('--' + k, +o[k].toFixed(4)); };
+if (story) try {
+  const svg = $('#storySvg'), panel = $('.story__panel', story), steps = $$('.step', story), steps0 = $('.story__steps', story);
+  const el = { bottle: $('.bottle', svg), num: $('.ro-n', svg), ing: $$('.ing', svg), rip: $$('.rpi', svg) };
   const seg = (p, a, b) => clamp((p - a) / (b - a));
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const spring = k => (k <= 0 ? 0 : k >= 1 ? 1 : 1 - Math.exp(-7 * k) * Math.cos(2.5 * Math.PI * k));      // 살짝 넘쳤다 자리 잡는 움직임
+  const back = k => { const c = 1.25, x = clamp(k) - 1; return 1 + (c + 1) * x * x * x + c * x * x; };     // 천천히 출발해 조금 지나쳤다 돌아오는 이동
+  const REST = [{ x: 190, y: 223, r: -10 }, { x: 294, y: 229, r: 6 }, { x: 242, y: 213, r: -2 }];        // 재료가 뜨는 자리(닭 · 감자 · 대파)
+  const DROP = [{ at: .74, land: .795, dx: 34, spin: -150 }, { at: .775, land: .83, dx: -26, spin: 120 }, { at: .81, land: .865, dx: 14, spin: -90 }];
   const state = p => {
-    const st = seg(p, 0, .26);
+    const sh = seg(p, .08, .285), env = Math.min(sh / .1, 1) * Math.min((1 - sh) / .12, 1);
+    const shk = sh > 0 && sh < 1 ? Math.sin(sh * Math.PI * 14) * env : 0;                                  // 위아래로 흔들기
+    const water = ease(seg(p, .36, .5)), glide = back(seg(p, .285, .34)), lift = Math.sin(seg(p, .52, .56) * Math.PI);
+    const tilt = ease(seg(p, .55, .62)) * (1 - spring(seg(p, .68, .76))), exit = ease(seg(p, .74, .8));
+    const flow = seg(p, .6, .665), broth = p >= .515, bs = lerp(2.3, 1.5, glide), pour = seg(p, .595, .63), pend = seg(p, .665, .7);
     return {
-      shake: st > 0 && st < 1 ? Math.sin(st * Math.PI * 8) * (1 - st) : 0,
-      lv: .74 * ease(seg(p, .22, .44)),
-      tilt: ease(seg(p, .44, .54)) - ease(seg(p, .72, .8)),
-      pour: seg(p, .5, .6), pend: seg(p, .68, .76),
-      mix: seg(p, .54, .72), ing: seg(p, .76, .92), steam: seg(p, .86, 1)
+      shk, water, bs, bmix: ease(seg(p, .1, .27)),
+      tap: ease(seg(p, .345, .375)) * (1 - ease(seg(p, .5, .53))),
+      pour, pend, pourOn: p > .595 && p < .7 ? 1 : 0, splash: clamp((pour - .85) / .15) * (1 - clamp((pend - .3) / .3)),   // splash: 줄기가 수면에 닿은 동안만
+      cloud: ease(seg(p, .61, .72)), mixo: ease(seg(p, .64, .75)),
+      bx: lerp(240, 372, glide) + exit * 60, by: lerp(96, 98, glide) - lift * 10 + shk * 10, ba: tilt * -128 + lift * 8 + shk * 5, bo: 1 - exit,
+      ro: ease(seg(p, .345, .38)) * (1 - ease(seg(p, .7, .74))), rob: seg(p, .51, .52),
+      num: broth ? Math.round(50 * flow) : Math.round(450 * water), rofrac: broth ? flow : water,                // 물 0→450 · 영점 · 육수 0→50
+      roflash: Math.sin(seg(p, .505, .535) * Math.PI),
+      fire: ease(seg(p, .79, .87)), boil: seg(p, .86, .95), steam: seg(p, .85, 1),
+      ing: DROP.map((d, i) => {
+        const f = seg(p, d.at, d.land), k = seg(p, d.land, d.land + .045), r = REST[i];
+        return { x: r.x + (1 - f) * d.dx, y: r.y - 250 * (1 - f * f) + Math.sin(k * Math.PI * 2.4) * (1 - k) * 7, r: r.r + (1 - f) * d.spin,
+                 o: clamp(f * 40), rk: seg(p, d.land, d.land + .055), ron: p >= d.land ? 1 : 0 };
+      })
     };
+  };
+  const setVars = o => { for (const k in o) panel.style.setProperty('--' + k, +o[k].toFixed(4)); };
+  const apply = s => {
+    setVars({ lv: s.water > 0 ? .06 + .68 * s.water : 0, fillr: s.water, tap: s.tap, pour: s.pour, pend: s.pend, pourOn: s.pourOn, splash: s.splash, cloud: s.cloud, mixo: s.mixo,
+      shk: s.shk, shkA: Math.abs(s.shk), bmix: s.bmix, ro: s.ro, rob: s.rob, rofrac: s.rofrac, roflash: s.roflash,
+      fire: s.fire, boil: s.boil, steam: s.steam, bsw: 3 / s.bs });                                          // bsw: 병이 커져도 선 굵기는 그대로
+    el.bottle.style.transform = `translate(${s.bx.toFixed(1)}px,${s.by.toFixed(1)}px) rotate(${s.ba.toFixed(2)}deg) scale(${s.bs.toFixed(3)}) translate(-32px,-32px)`;
+    el.bottle.style.opacity = s.bo.toFixed(3);
+    if (el.num.textContent !== String(s.num)) el.num.textContent = s.num;
+    s.ing.forEach((g, i) => {
+      el.ing[i].style.transform = `translate(${g.x.toFixed(1)}px,${g.y.toFixed(1)}px) rotate(${g.r.toFixed(1)}deg)`;
+      el.ing[i].style.opacity = g.o.toFixed(3);
+      el.rip[i].style.setProperty('--rk', g.rk.toFixed(3)); el.rip[i].style.setProperty('--ron', g.ron);
+    });
   };
   /* 읽는 기준선: 데스크톱은 화면 가운데, 모바일은 고정 패널 아래 영역의 가운데 */
   const stick = $('.story__stick', story), narrow = matchMedia('(max-width: 899px)');
@@ -348,8 +382,8 @@ if (story) {
     const r = steps0.getBoundingClientRect(), mid = readLine(), a = mid + innerHeight * .12, b = mid - innerHeight * .08;
     return clamp((a - r.top) / (a - b + r.height));
   };
-  if (RM) setVars(state(1));
-  else addScrub(prog, p => setVars(state(p)));
+  if (RM) apply(state(1));
+  else { apply(state(0)); addScrub(prog, p => apply(state(Number.isFinite(p) ? p : 0))); }
   /* 기준선에 가장 가까운 단계를 강조 */
   const mark = () => {
     const mid = readLine(); let best = 0, bd = 1e9;
@@ -358,7 +392,9 @@ if (story) {
     story.dataset.active = best;
   };
   addScrub(() => { mark(); return 0; }, () => {});
-}
+  /* 화면 밖에서는 물결·김·불꽃 같은 반복 움직임을 멈춘다 */
+  new IntersectionObserver(es => story.classList.toggle('is-off', !es[es.length - 1].isIntersecting), { rootMargin: '120px' }).observe(story);
+} catch (e) { console.warn('[s101] 냄비 스토리를 시작하지 못했습니다 — 나머지 구역은 계속 동작합니다', e); }
 
 /* ── 8. 계산기 — 2인분(육수 50g + 물 450g) 비율을 그대로 곱한 값 ── */
 (() => {

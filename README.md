@@ -18,7 +18,7 @@ node tools/serve.mjs 3000      # 저장소 루트에서. 다른 위치라면 too
 | 경쟁 빈틈을 반영한 비교·FAQ | 페이지 안 — 궁금한 점 6행 · 비교 인포그래픽 · 정직한 맛 표기 |
 | 레퍼런스 질감 | `css/style.css` 맨 위 토큰 (소스101 톤 + 종이 결·아치 무대·눈금) |
 | 투명 PNG · 회전 루프 | `assets/bottle/` (아래) |
-| SVG 인터랙션 | 페이지 안 4곳 + `snippets/` 독립 코드 4개 |
+| SVG 인터랙션 | 페이지 안 4곳 + `snippets/` 독립 코드 4개 — 「세 번이면 끓습니다」 냄비 스토리는 저울 표시창이 물 0→450g · 육수 0→50g 을 세고 눈금자·물결·불꽃이 스크롤에 맞춰 움직입니다(`js/main.js` 7번 구역) |
 | 행동심리 카피 | `index.html` · `i18n/` — 라벨·승인된 사실과 숫자만 쓰고 `tools/check_copy.py`로 점검 |
 
 ## 구조
@@ -80,5 +80,6 @@ python3 tools/export_turn.py --frames-dir /tmp/turn-raw --out assets/bottle
 
 - 가격·링크·연락처 → `data/config.json` · 후기 → `data/reviews.json` · 한국어 문구 → `index.html`(+ 번역 갱신)
 - 점검: `python3 tools/check_copy.py`(금지 표현·근거 없는 숫자·타 플랫폼 링크·영어/스페인어 후기 문구) · `python3 tools/test_tools.py`
+- 이 데모 페이지와 `snippets/` 는 검색엔진에 색인되지 않도록 `<meta name="robots" content="noindex">` 가 들어 있습니다. 실서비스에 올릴 때는 `index.html` 과 `snippets/*.html` 에서 지우세요.
 - 타사 브랜드명 금지 목록은 저장소에 두지 않습니다. `tools/banned_brands.local.txt`(한 줄에 하나, git 제외)를 만들면 `check_copy.py`가 함께 검사합니다.
 - 실제 병 자산으로 렌더까지 시험하려면 `S101_BOTTLE_BASE`(병 원본·띠 좌표 폴더)와 `S101_LABEL`(라벨 PNG)을 지정해 `test_tools.py`를 실행하세요(없으면 그 시험만 건너뜁니다).
