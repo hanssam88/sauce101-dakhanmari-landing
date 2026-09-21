@@ -1,0 +1,31 @@
+{
+  "_readme": "이 파일의 값만 바꿔서 페이지 문구·링크를 갱신합니다. 값이 null이면 해당 문구를 숨깁니다.",
+  "buy_url": "https://sauce101.co.kr/product/detail.html?product_no=55",
+  "buy_label": "자사몰에서 구매하기",
+  "price": {
+    "list": 11900,
+    "sale": 9900,
+    "shipping_fee": 3000,
+    "show_per_use": false,
+    "_show_per_use_note": "true로 바꾸면 '1회(2인분) 약 ○원'(판매가 ÷ 6회)을 표시합니다. 이 원 환산은 계산값이므로 표시하기 전에 확정하세요.",
+    "verified_at": "2026-09-20",
+    "source": "자사몰 상품 페이지(product_no=55) 소비자가·판매가·배송비 표기"
+  },
+  "uses_per_bottle": 6,
+  "refund": {
+    "guarantee_days": null,
+    "guarantee_note": null,
+    "_note": "guarantee_days에 숫자를 넣으면 '○일 환불 보장' 배지가 뜹니다. 실제로 운영하는 정책일 때만 입력하세요. 기본값은 자사몰 교환·반품 정책 그대로입니다."
+  },
+  "contact": {
+    "phone": "0507-1343-3918",
+    "email": "hello@sauce101.co.kr"
+  },
+  "certs": {
+    "holder": "㈜에프앤에스식품(제조원)",
+    "haccp_no": "제2021-3-0546호",
+    "haccp_valid_until": "2027-05-06",
+    "insurance_valid_until": "2027-06-23"
+  },
+  "availability_note": null
+}

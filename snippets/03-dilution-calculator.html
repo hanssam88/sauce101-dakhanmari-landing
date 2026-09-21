@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>인원·진하기 계산기 — 복붙용</title>
+<style>body{margin:0;background:#F3F0E5;color:#1D2A18;font:16px/1.7 system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif}
+.demo-wrap{max-width:940px;margin:0 auto;padding:40px 20px}</style>
+</head>
+<body>
+<div class="demo-wrap">
+
+<!-- ▼ 복사 시작 ─────────────────────────────────────────── -->
+<!-- 2인분 기준(육수 50g + 물 450g)의 비율을 곱해 인원별 g을 계산합니다. 진하기는 육수는 그대로, 물만 바꿉니다.
+     값을 바꿀 때: 아래 스크립트 맨 위 CONFIG (병 용량 · 1인 육수 g · 1인 물 g · 최대 인원) -->
+<div class="s101-calc" id="s101Calc">
+  <div class="s101-calc__ctl">
+    <div>
+      <span class="s101-calc__lbl">인원</span>
+      <div class="s101-calc__step" role="group" aria-label="인원">
+        <button type="button" data-p="-1" aria-label="인원 줄이기">−</button>
+        <output data-out="people" aria-live="polite">2</output><span>명</span>
+        <button type="button" data-p="1" aria-label="인원 늘리기">＋</button>
+      </div>
+    </div>
+    <div>
+      <span class="s101-calc__lbl">진하기</span>
+      <div class="s101-calc__seg" role="radiogroup" aria-label="진하기">
+        <button type="button" role="radio" aria-checked="false" data-s="light">연하게</button>
+        <button type="button" role="radio" aria-checked="true" data-s="base">기본</button>
+        <button type="button" role="radio" aria-checked="false" data-s="rich">진하게</button>
+      </div>
+    </div>
+    <p class="s101-calc__note" data-out="note"></p>
+  </div>
+  <div class="s101-calc__out" aria-live="polite">
+    <svg class="s101-calc__bowl" viewBox="0 0 180 130" aria-hidden="true">
+      <defs>
+        <clipPath id="s101BowlClip"><path d="M14 40h152c0 40-30 72-76 72S14 80 14 40z"/></clipPath>
+        <linearGradient id="s101BowlG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s101-g1"/><stop offset="1" class="s101-g2"/></linearGradient>
+      </defs>
+      <g clip-path="url(#s101BowlClip)"><rect class="s101-calc__liq" x="0" y="0" width="180" height="130" fill="url(#s101BowlG)"/></g>
+      <path class="s101-calc__ln" d="M14 40h152c0 40-30 72-76 72S14 80 14 40z"/><path class="s101-calc__ln" d="M62 118h56"/>
+      <path class="s101-calc__st" d="M66 30c-6-8 6-11 0-19M90 30c-6-8 6-11 0-19M114 30c-6-8 6-11 0-19"/>
+    </svg>
+    <dl class="s101-calc__read">
+      <div><dt>육수</dt><dd><b data-out="base">50</b><i>g</i></dd></div>
+      <div><dt>물</dt><dd><b data-out="water">450</b><i>g</i></dd></div>
+      <div class="w"><dt>한 병으로</dt><dd><b data-out="times">6</b><i>회</i><em>+</em><b data-out="left">30</b><i>g</i></dd></div>
+    </dl>
+  </div>
+</div>
+<style>
+.s101-calc{--forest:#22321B;--cream:#F3F0E5;--gold:#F5E6B8;display:grid;max-width:900px;margin:0 auto;border-radius:28px;overflow:hidden;background:#F9F7EF;box-shadow:inset 0 0 0 1px rgba(29,42,24,.14),0 40px 70px -50px rgba(29,42,24,.55);font-family:system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;color:#1D2A18;word-break:keep-all}
+@media(min-width:820px){.s101-calc{grid-template-columns:.9fr 1.1fr}}
+.s101-calc__ctl{display:grid;gap:26px;align-content:start;padding:clamp(22px,3vw,40px)}
+.s101-calc__lbl{display:block;font:500 12.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#727C6A;margin-bottom:12px}
+.s101-calc__step{display:inline-flex;align-items:center;border:1.5px solid #1D2A18;border-radius:99px;overflow:hidden}
+.s101-calc__step button{width:56px;height:56px;border:0;background:transparent;font:500 24px system-ui,sans-serif;color:#1D2A18;cursor:pointer;transition:background .2s,color .2s}
+.s101-calc__step button:hover{background:#1D2A18;color:var(--cream)}
+.s101-calc__step output{min-width:44px;text-align:center;font:500 30px/1 ui-monospace,Menlo,monospace}
+.s101-calc__step span{padding-right:16px;font-weight:600}
+.s101-calc__seg{display:inline-grid;grid-auto-flow:column;gap:4px;padding:4px;border:1.5px solid #1D2A18;border-radius:99px}
+.s101-calc__seg button{border:0;background:transparent;padding:12px 18px;border-radius:99px;font:600 15px/1 system-ui,sans-serif;color:#1D2A18;cursor:pointer;transition:background .25s,color .25s}
+.s101-calc__seg button[aria-checked=true]{background:var(--forest);color:var(--cream)}
+.s101-calc__note{margin:0;font-size:14px;color:#727C6A;line-height:1.7}
+.s101-calc__out{display:grid;gap:20px;justify-items:center;align-content:center;padding:clamp(22px,3vw,40px);color:var(--cream);background:linear-gradient(180deg,#2E4524,#1B2915)}
+.s101-calc__bowl{width:min(240px,62%);height:auto}
+.s101-calc__ln{fill:none;stroke:var(--cream);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.s101-calc__st{fill:none;stroke:rgba(243,240,229,.55);stroke-width:2.5;stroke-linecap:round}
+.s101-calc__liq{transform:translateY(calc(112px - var(--fill,.8) * 72px));transition:transform .8s cubic-bezier(.22,.8,.2,1)}
+.s101-g1{stop-color:#E6C26E}.s101-g2{stop-color:#B98A31}
+.s101-calc__out[data-s=light] .s101-g1{stop-color:#F1DEA9}.s101-calc__out[data-s=light] .s101-g2{stop-color:#D7B66A}
+.s101-calc__out[data-s=rich] .s101-g1{stop-color:#D7A94A}.s101-calc__out[data-s=rich] .s101-g2{stop-color:#8E631A}
+.s101-calc__read{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:12px 28px;width:100%}
+.s101-calc__read dt{font:500 12.5px/1 system-ui,sans-serif;letter-spacing:.06em;color:rgba(243,240,229,.6);margin:0 0 8px}
+.s101-calc__read dd{margin:0;display:flex;align-items:baseline;gap:3px;color:var(--gold)}
+.s101-calc__read b{font:500 clamp(32px,4vw,50px)/1 ui-monospace,Menlo,monospace;letter-spacing:-.04em;text-shadow:0 0 22px rgba(227,188,100,.3)}
+.s101-calc__read i{font:400 16px ui-monospace,Menlo,monospace;font-style:normal;opacity:.7;margin-right:4px}
+.s101-calc__read em{font:400 22px ui-monospace,Menlo,monospace;font-style:normal;opacity:.5;margin:0 6px}
+.s101-calc__read .w{grid-column:1/-1;padding-top:14px;border-top:1px solid rgba(243,240,229,.16)}
+@media (prefers-reduced-motion:reduce){.s101-calc__liq{transition:none}}
+</style>
+<script>
+(function () {
+  var CONFIG = { bottleG: 330, baseG: 25, water: { light: 250, base: 225, rich: 200 }, maxPeople: 6 };   // 1인당 g
+  var FILL = { light: .88, base: .8, rich: .72 },   // 그릇 수위 ∝ 육수+물 합계(연하게 550g : 기본 500g : 진하게 450g)
+      NAME = { light: '연하게', base: '기본', rich: '진하게' };
+  var CUP = { light: '종이컵 세 컵 가까이', base: '종이컵 두 컵 반', rich: '종이컵 두 컵 남짓' };
+  var root = document.getElementById('s101Calc'), st = { people: 2, s: 'base' };
+  function out(k, v) { root.querySelector('[data-out="' + k + '"]').textContent = v; }
+  function render() {
+    var base = CONFIG.baseG * st.people, water = CONFIG.water[st.s] * st.people;
+    var times = Math.floor(CONFIG.bottleG / base), left = CONFIG.bottleG - times * base;
+    out('people', st.people); out('base', base); out('water', water); out('times', times); out('left', left);
+    root.querySelector('.s101-calc__out').setAttribute('data-s', st.s);
+    root.querySelector('.s101-calc__liq').style.setProperty('--fill', FILL[st.s]);
+    out('note', st.people === 2
+      ? NAME[st.s] + ' 2인분: 육수 50g' + (st.s === 'base' ? '(약 종이컵 4분의 1)' : '') + ' + 물 ' + water + 'g(' + CUP[st.s] + ') · 종이컵 180ml 기준'
+      : NAME[st.s] + ' ' + st.people + '인분: 육수 ' + base + 'g + 물 ' + water + 'g · 2인분 기준 비율을 곱한 계산값입니다.');
+    [].forEach.call(root.querySelectorAll('[data-s]'), function (b) { if (b.hasAttribute('role')) b.setAttribute('aria-checked', b.getAttribute('data-s') === st.s); });
+  }
+  [].forEach.call(root.querySelectorAll('[data-p]'), function (b) {
+    b.addEventListener('click', function () { st.people = Math.min(CONFIG.maxPeople, Math.max(1, st.people + +b.getAttribute('data-p'))); render(); });
+  });
+  [].forEach.call(root.querySelectorAll('.s101-calc__seg [data-s]'), function (b) {
+    b.addEventListener('click', function () { st.s = b.getAttribute('data-s'); render(); });
+  });
+  render();
+})();
+</script>
+<!-- ▲ 복사 끝 ─────────────────────────────────────────── -->
+
+</div>
+</body>
+</html>

@@ -1,0 +1,83 @@
+{
+  "_readme": "구매 후기 데이터. 지금 들어 있는 6건은 실제 후기가 아닌 '예시'(sample:true)입니다 — 화면에서 카드마다 '예시' 표시와 안내문이 붙고, 예시만 있을 때는 평균 별점·총건수 대신 '예시 N건'만 보여 줍니다. 형식·길이·주제는 일반적인 쇼핑몰 후기의 패턴을 참고했고 문장은 새로 썼습니다. 작성자는 실제 후기 관행처럼 '첫 글자+*+끝 글자'로 마스킹했으며 '예시'를 가린 이름입니다. 실제 후기가 생기면 items 를 실제 후기로 교체하세요(sample 항목을 지우면 카드에 '구매 확인' 표시가 붙고 meta.source·as_of 가 있으면 평균이 계산됩니다). 게시 직전에는 `python3 tools/check_copy.py --publish` — 예시가 남아 있으면 실패합니다. text·name·option·meta.source 는 {ko,en,es} 객체이거나 한 언어 문자열입니다.",
+  "meta": {
+    "source": { "ko": "예시(실제 후기 아님)", "en": "Examples (not real reviews)", "es": "Ejemplos (no son reseñas reales)" },
+    "as_of": "2026-09-21",
+    "tag_labels": {
+      "dose": { "ko": "정량이 명확해요", "en": "Clear dosing", "es": "Dosis clara" },
+      "count": { "ko": "사용 횟수가 표기와 같아요", "en": "Uses match the label", "es": "Los usos coinciden con la etiqueta" },
+      "shake": { "ko": "사용 안내가 친절해요", "en": "Helpful instructions", "es": "Instrucciones útiles" },
+      "menus": { "ko": "활용도가 좋아요", "en": "Versatile", "es": "Versátil" },
+      "strength": { "ko": "진하기 조절이 쉬워요", "en": "Easy to adjust strength", "es": "Fácil ajustar la intensidad" },
+      "contents": { "ko": "구성 안내를 꼭 보세요", "en": "Check what's included", "es": "Revise qué incluye" }
+    }
+  },
+  "items": [
+    {
+      "sample": true, "rating": 5, "date": "2026-09-21",
+      "name": { "ko": "예*가", "en": "E*****e A", "es": "E*****o A" },
+      "option": { "ko": "1병 (330g)", "en": "1 bottle (330g)", "es": "1 botella (330g)" },
+      "text": {
+        "ko": "정량이 딱 적혀 있어서 그대로 했어요. 물 450g에 육수 50g!",
+        "en": "The amounts are printed right on it, so I just followed them. 50g of soup base to 450g of water!",
+        "es": "Las cantidades vienen indicadas, así que las seguí tal cual. ¡50g de base con 450g de agua!"
+      },
+      "tags": ["dose"]
+    },
+    {
+      "sample": true, "rating": 5, "date": "2026-09-21",
+      "name": { "ko": "예*나", "en": "E*****e B", "es": "E*****o B" },
+      "option": { "ko": "2병 (660g)", "en": "2 bottles (660g)", "es": "2 botellas (660g)" },
+      "text": {
+        "ko": "한 병으로 6번 끓이고 30g 남았어요. 표기 그대로라 다음 병 열 때를 알 수 있어서 좋아요.",
+        "en": "I got 6 pots from one bottle with 30g left over. It matches the label, so I know when to open the next one.",
+        "es": "Con una botella preparé 6 ollas y sobraron 30g. Coincide con la etiqueta, así que sé cuándo abrir la siguiente."
+      },
+      "tags": ["count", "dose"]
+    },
+    {
+      "sample": true, "rating": 4, "date": "2026-09-21",
+      "name": { "ko": "예*다", "en": "E*****e C", "es": "E*****o C" },
+      "option": { "ko": "1병 (330g)", "en": "1 bottle (330g)", "es": "1 botella (330g)" },
+      "text": {
+        "ko": "가라앉은 게 있어서 놀랐는데, 안내대로 충분히 흔들었더니 고르게 섞였어요. 미리 적혀 있어서 안심이었어요.",
+        "en": "I was surprised by the sediment, but shaking it well as instructed mixed it evenly. I'm glad it was explained up front.",
+        "es": "Me sorprendió el sedimento, pero al agitarla bien como indican las instrucciones se mezcló de forma uniforme. Agradezco que lo explicaran de antemano."
+      },
+      "tags": ["shake"]
+    },
+    {
+      "sample": true, "rating": 5, "date": "2026-09-21",
+      "name": { "ko": "예*라", "en": "E*****e D", "es": "E*****o D" },
+      "option": { "ko": "1병 (330g)", "en": "1 bottle (330g)", "es": "1 botella (330g)" },
+      "text": {
+        "ko": "국물이 깔끔해서 닭한마리도, 다음 날 칼국수도 같은 비율로 잘 끓였어요~",
+        "en": "The broth tastes clean, and I used the same ratio for dak-hanmari and, the next day, kalguksu~",
+        "es": "El caldo tiene un sabor limpio; usé la misma proporción para dak-hanmari y, al día siguiente, para kalguksu~"
+      },
+      "tags": ["menus", "strength"]
+    },
+    {
+      "sample": true, "rating": 4, "date": "2026-09-21",
+      "name": { "ko": "예*마", "en": "E*****e E", "es": "E*****o E" },
+      "option": { "ko": "1병 (330g)", "en": "1 bottle (330g)", "es": "1 botella (330g)" },
+      "text": {
+        "ko": "기본으로 끓이고, 다음엔 물을 400g으로 줄여 진하게 해 봤어요. 물만 바꾸면 돼서 조절이 쉬워요.",
+        "en": "I made the base amount first, then cut the water to 400g for a stronger soup. Only the water changes, so it's easy to adjust.",
+        "es": "Primero hice la cantidad base y luego reduje el agua a 400g para un caldo más concentrado. Solo cambia el agua, así que es fácil de ajustar."
+      },
+      "tags": ["strength", "dose"]
+    },
+    {
+      "sample": true, "rating": 3, "date": "2026-09-21",
+      "name": { "ko": "예*바", "en": "E*****e F", "es": "E*****o F" },
+      "option": { "ko": "1병 (330g)", "en": "1 bottle (330g)", "es": "1 botella (330g)" },
+      "text": {
+        "ko": "닭이 들어 있는 줄 알았는데 병에는 육수만 들어 있어요. 재료는 별도라고 적혀 있었는데 제가 놓쳤네요. 닭과 채소를 준비하니 잘 끓었어요.",
+        "en": "I thought chicken was included, but the bottle only contains the soup base. It said ingredients are separate and I missed that. With chicken and vegetables prepared, it worked well.",
+        "es": "Pensé que incluía pollo, pero la botella solo trae la base de caldo. Decía que los ingredientes van aparte y se me pasó. Con el pollo y las verduras preparados, funcionó bien."
+      },
+      "tags": ["contents"]
+    }
+  ]
+}

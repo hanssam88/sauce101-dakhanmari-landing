@@ -1,0 +1,12 @@
+# 내부 문서는 저장소에 올리지 않는다
+docs/
+tools/banned_brands.local.txt
+.claude/
+
+.DS_Store
+__pycache__/
+*.pyc
+node_modules/
+*.log
+.env
+.env.*

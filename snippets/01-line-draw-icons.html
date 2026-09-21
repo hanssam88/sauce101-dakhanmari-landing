@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>스크롤 선 그리기 SVG 아이콘 — 복붙용</title>
+<style>body{margin:0;background:#F3F0E5;color:#1D2A18;font:16px/1.7 system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif}
+.demo-pad{height:80vh;display:grid;place-items:center;text-align:center;color:#727C6A;font-size:14px;padding:0 20px}</style>
+</head>
+<body>
+<div class="demo-pad">↓ 아래로 스크롤하면 아이콘이 그려집니다.<br>아이콘에 마우스를 올리면 다시 그려집니다.<br>(복사 영역은 아래 「복사 시작 / 복사 끝」 주석 사이)</div>
+
+<!-- ▼ 복사 시작 ─────────────────────────────────────────── -->
+<div class="s101-icons">
+  <figure><i data-ico="pot"></i><figcaption>냄비</figcaption></figure>
+  <figure><i data-ico="bottle"></i><figcaption>병</figcaption></figure>
+  <figure><i data-ico="scale"></i><figcaption>저울</figcaption></figure>
+  <figure><i data-ico="cup"></i><figcaption>종이컵</figcaption></figure>
+  <figure><i data-ico="drop"></i><figcaption>한 방울</figcaption></figure>
+  <figure><i data-ico="bowl"></i><figcaption>한 그릇</figcaption></figure>
+  <figure><i data-ico="calendar"></i><figcaption>소비기한</figcaption></figure>
+  <figure><i data-ico="shield"></i><figcaption>안심</figcaption></figure>
+</div>
+<style>
+/* --p(0→1)를 숫자로 등록하면 CSS transition만으로 선이 그려진다 */
+@property --p{syntax:"<number>";inherits:true;initial-value:0}
+.s101-icons{--ink:#3E5A25;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:28px 20px;max-width:780px;margin:0 auto;padding:48px 20px}
+.s101-icons figure{margin:0;text-align:center}
+.s101-icons i{display:block;width:72px;height:72px;margin:0 auto 12px;color:var(--ink);cursor:pointer;transition:--p 1.25s cubic-bezier(.22,.8,.2,1)}
+.s101-icons i.on{--p:1}
+.s101-icons svg{display:block;width:100%;height:100%;overflow:visible}
+/* 각 도형은 pathLength=1 이라 dash 길이를 0~1로 다룬다. --s 는 도형별 시작 지연(순차 그리기) */
+.s101-icons .d{stroke-dasharray:1;stroke-dashoffset:calc(1 - clamp(0,(var(--p) - var(--s,0)) / .6,1))}
+.s101-icons figcaption{font:600 14px/1.4 system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;color:#4A5642}
+@media (prefers-reduced-motion:reduce){.s101-icons i{--p:1;transition:none}}
+</style>
+<script>
+(function () {
+  var ICONS = {
+    pot: '<path d="M12 27h40v17c0 6-4.5 10-10.5 10h-19C16.5 54 12 50 12 44z"/><path d="M16 27c0-7 7-11 16-11s16 4 16 11"/><path d="M29 12h6"/><path d="M12 33H6M52 33h6"/>',
+    bottle: '<path d="M27 5h10v8H27z"/><path d="M28 13v6c-5 3-8 6-8 12v21a5 5 0 0 0 5 5h14a5 5 0 0 0 5-5V31c0-6-3-9-8-12v-6"/><path d="M20 34h24M20 46h24"/>',
+    scale: '<path d="M9 36h46v16a4 4 0 0 1-4 4H13a4 4 0 0 1-4-4z"/><path d="M20 30c0-3 5-5 12-5s12 2 12 5"/><path d="M22 46a10 10 0 0 1 20 0"/><path d="M32 46l5-6"/>',
+    cup: '<path d="M18 12h28l-4 40a3 3 0 0 1-3 3H25a3 3 0 0 1-3-3z"/><path d="M23 24h8M24 34h8M25 44h8"/>',
+    drop: '<path d="M32 8c9 10 15 18 15 26a15 15 0 0 1-30 0c0-8 6-16 15-26z"/><path d="M25 38a7 7 0 0 0 5 6"/>',
+    bowl: '<path d="M7 30h50c0 15-10 25-25 25S7 45 7 30z"/><path d="M23 58h18"/><path d="M23 22c-4-4 3-5-1-10M32 22c-4-4 3-5-1-10M41 22c-4-4 3-5-1-10"/>',
+    calendar: '<path d="M11 14h42a3 3 0 0 1 3 3v34a3 3 0 0 1-3 3H11a3 3 0 0 1-3-3V17a3 3 0 0 1 3-3z"/><path d="M8 26h48M22 8v10M42 8v10"/><path d="M24 41l6 6 11-12"/>',
+    shield: '<path d="M32 6l20 7v15c0 14-9 24-20 30-11-6-20-16-20-30V13z"/><path d="M22 32l7 7 13-14"/>'
+  };
+  function svg(name) {
+    var n = 0;
+    var body = ICONS[name].replace(/<(path|circle|ellipse|line|rect)\b/g, function (m, t) {
+      return '<' + t + ' class="d" pathLength="1" style="--s:' + (n++ * 0.09).toFixed(2) + '"';
+    });
+    return '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + body + '</svg>';
+  }
+  var box = document.querySelector('.s101-icons');
+  var items = [].slice.call(box.querySelectorAll('i[data-ico]'));
+  items.forEach(function (el) {
+    el.innerHTML = svg(el.getAttribute('data-ico'));
+    el.addEventListener('mouseenter', function () {          // 다시 그리기
+      el.style.transition = 'none'; el.classList.remove('on'); void el.offsetWidth;
+      el.style.transition = ''; el.classList.add('on');
+    });
+  });
+  if (!('IntersectionObserver' in window)) { items.forEach(function (el) { el.classList.add('on'); }); return; }
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) { setTimeout(function () { e.target.classList.add('on'); }, +e.target.getAttribute('data-i') * 90); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.6 });
+  items.forEach(function (el, i) { el.setAttribute('data-i', i); io.observe(el); });
+})();
+</script>
+<!-- ▲ 복사 끝 ─────────────────────────────────────────── -->
+
+<div class="demo-pad" style="height:40vh">끝</div>
+</body>
+</html>
