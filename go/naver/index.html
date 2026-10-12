@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#F3F0E5">
+  <meta name="description" content="소스101 / Sauce101 스마트스토어로 이동합니다. 네이버 앱 또는 웹에서 만나보세요.">
+  <title>스마트스토어로 이동 | 소스101 / Sauce101</title>
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="./page.css">
+  <script type="module" src="./page.js"></script>
+</head>
+<body class="naver-go">
+  <main class="go-card">
+    <p class="go-brand">소스101 <span aria-hidden="true">/</span> <span lang="en">Sauce101</span></p>
+    <div class="go-rule" aria-hidden="true"></div>
+    <p class="go-eyebrow">소스101 공식 스토어</p>
+    <h1>소스101 스마트스토어로 이동합니다.</h1>
+    <p class="go-intro" id="app-note">네이버 앱에 로그인되어 있다면 재로그인을 줄일 수 있습니다.</p>
+    <div class="go-actions">
+      <a class="btn btn--solid" id="open-app" href="https://m.smartstore.naver.com/sauce101" aria-describedby="app-note">네이버 앱에서 열기 <span aria-hidden="true">↗</span></a>
+      <a class="btn btn--line" id="open-web" href="https://m.smartstore.naver.com/sauce101">웹에서 보기 <span aria-hidden="true">→</span></a>
+    </div>
+    <p id="app-status" class="go-status" role="status" aria-live="polite"></p>
+    <details id="app-help">
+      <summary>앱이 열리지 않나요?</summary>
+      <div class="go-help">
+        <p>화면의 메뉴에 ‘외부 브라우저에서 열기’가 제공되면 해당 기능을 사용해 주세요.</p>
+        <p>메뉴가 없다면 아래에서 링크를 복사해 Safari 또는 Chrome에서 열고 ‘네이버 앱에서 열기’를 다시 눌러 주세요.</p>
+        <p>계속 열리지 않거나 네이버 앱이 없다면 ‘웹에서 보기’를 이용해 주세요. 이용 환경에 따라 로그인이 필요할 수 있습니다.</p>
+      </div>
+    </details>
+    <button class="go-copy" id="copy-link" type="button" hidden>링크 복사</button>
+    <p id="copy-status" class="go-status" role="status" aria-live="polite"></p>
+    <div id="manual-copy" hidden>
+      <label for="copy-url">복사할 링크</label>
+      <input id="copy-url" type="url" readonly spellcheck="false" autocapitalize="off" aria-describedby="copy-status">
+    </div>
+    <noscript><p class="go-help">‘웹에서 보기’로 이동할 수 있습니다. 이 페이지를 공유하려면 주소창의 주소를 복사해 주세요.</p></noscript>
+  </main>
+  <footer class="go-footer">소스101 / Sauce101</footer>
+</body>
+</html>

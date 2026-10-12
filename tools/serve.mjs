@@ -30,6 +30,12 @@ export function resolvePath(urlPath) {
 }
 
 export function handler(req, res) {
+  // Match the directory URL used by GitHub Pages so relative bridge assets resolve.
+  const [pathname, ...query] = (req.url || '/').split('?');
+  if (pathname === '/go/naver') {
+    res.writeHead(301, { Location: '/go/naver/' + (query.length ? '?' + query.join('?') : '') });
+    return res.end();
+  }
   const r = resolvePath(req.url || '/');
   if (r.status !== 200) { res.writeHead(r.status, { 'Content-Type': 'text/plain; charset=utf-8' }); return res.end(`${r.status}`); }
   const size = fs.statSync(r.file).size;

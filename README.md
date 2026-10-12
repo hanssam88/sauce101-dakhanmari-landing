@@ -1,3 +1,6 @@
+> 열람 범위: 공개
+> 작성일: 기존 문서 / 수정일: 2026-10-12
+
 # 소스101 닭한마리육수 — 코드형 설득 상세페이지
 
 이미지 슬라이스가 아니라 **HTML·CSS·JS로 만든 상세페이지**입니다(의존성 없음). 기존 승인 소스101 톤(크림·올리브·명조)을 유지하고, 주방 저울의 눈금 어법을 서명 요소로 얹었습니다. 한국어가 기본이고 상단 **KO · EN · ES** 버튼(구매하기 옆)으로 영어·스페인어로 바꿔 볼 수 있습니다.
@@ -86,3 +89,34 @@ python3 tools/export_turn.py --frames-dir /tmp/turn-raw --out assets/bottle
 - 타사 브랜드명 금지 목록은 저장소에 두지 않습니다. `tools/banned_brands.local.txt`(한 줄에 하나, git 제외)를 만들면 `check_copy.py`가 함께 검사합니다.
 - 실제 병 자산으로 렌더까지 시험하려면 `S101_BOTTLE_BASE`(병 원본·띠 좌표 폴더)와 `S101_LABEL`(라벨 PNG)을 지정해 `test_tools.py`를 실행하세요(없으면 그 시험만 건너뜁니다).
 - 첫 화면이 로드 뒤에도 보이는지(제목·구매 버튼이 투명하게 남지 않는지) 보는 브라우저 시험(`HeroFirstPaint`)은 Playwright(Chromium)가 설치돼 있으면 실행되고 없으면 건너뜁니다(`pip install playwright && playwright install chromium`).
+
+## 네이버 앱 연결 페이지 (2026-10-11)
+
+`/go/naver/`는 소스101 / Sauce101 스마트스토어로 연결하는 별도 페이지입니다.
+기존 상품 페이지의 구매 버튼과 `data/config.json`은 그대로 유지합니다.
+
+```bash
+node tools/serve.mjs 3181
+# 같은 Wi-Fi 휴대폰: HOST=0.0.0.0 node tools/serve.mjs 3181
+node --test tools/test_naver_links.mjs
+node --check go/naver/page.js
+node --check go/naver/links.js
+```
+
+로컬: http://localhost:3181/go/naver/ . 앱 호출은 버튼 클릭 시에만 시도합니다.
+iOS는 네이버 공식 scheme, Android는 Intent + HTTPS 스토어 fallback을 사용하며,
+환경을 구분하지 못하면 웹으로 연결합니다. 설치·로그인 성공을 감지하거나 보장하지 않습니다.
+자동 앱스토어 이동, 타이머, 분석 SDK, 인증정보 수집은 없습니다.
+복사 버튼은 쿼리를 제외한 **연결 페이지 주소**를 복사하고 실패하면 수동 복사 필드를 제공합니다.
+일반 HTTP의 LAN 주소에서는 Clipboard API가 제한될 수 있으므로 수동 복사를 사용합니다.
+
+공식 근거 (확인 2026-10-11):
+- https://developers.naver.com/docs/utils/mobileapp/
+- https://developer.chrome.com/docs/android/intents
+
+GitHub Pages API로 확인한 배포 기준은 `main`의 루트이며 custom domain은 없습니다.
+공개 연결 페이지 주소는 `https://hanssam88.github.io/sauce101-dakhanmari-landing/go/naver/`입니다.
+2026-10-12 사용자가 이번 연결 페이지 변경의 커밋·푸시·배포를 승인했습니다.
+`main`에 푸시하면 GitHub Pages가 배포합니다. 새 빌드와 공개 URL을 확인한 뒤
+iPhone/Android에서 테스트하세요. 실제 앱 실행·추가 로그인·주문서 도착은 실기기에서 확인해야 합니다.
+실기기 결과표와 상세 조사·검증 기록은 로컬 `docs/2026-10-11-naver-bridge.md`에 있습니다.
