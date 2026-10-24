@@ -1,5 +1,5 @@
 > 열람 범위: 공개
-> 작성일: 기존 문서 / 수정일: 2026-10-12
+> 작성일: 기존 문서 / 수정일: 2026-10-24
 
 # 소스101 닭한마리육수 — 코드형 설득 상세페이지
 
@@ -120,3 +120,16 @@ GitHub Pages API로 확인한 배포 기준은 `main`의 루트이며 custom dom
 `main`에 푸시하면 GitHub Pages가 배포합니다. 새 빌드와 공개 URL을 확인한 뒤
 iPhone/Android에서 테스트하세요. 실제 앱 실행·추가 로그인·주문서 도착은 실기기에서 확인해야 합니다.
 실기기 결과표와 상세 조사·검증 기록은 로컬 `docs/2026-10-11-naver-bridge.md`에 있습니다.
+
+## 쿠팡 육수 3종 선택 페이지 (2026-10-24)
+
+`/go/coupang/`에서 맑은전골육수 360g, 얼큰전골육수 350g, 황태해장국육수 350g을 고른 뒤 각 쿠팡 단품 상품으로 이동합니다. 승인된 제품 사진·활용 요리와 일반 HTTPS 링크를 사용하는 정적 HTML/CSS 페이지입니다. 가격·재고·배송 정보는 연결되는 쿠팡 상품 페이지에서 확인합니다.
+
+```bash
+node tools/serve.mjs 3184
+# http://localhost:3184/go/coupang/
+```
+
+소스는 `go/coupang/index.html`, 스타일은 `go/coupang/page.css`, 대표이미지는 `go/coupang/assets/`에 있습니다. 기존 상세페이지와 네이버 연결 페이지는 변경하지 않습니다. 앱 강제 호출, 자동 이동, 분석 SDK는 없습니다.
+
+프로필용 공개 경로는 `https://hanssam88.github.io/sauce101-dakhanmari-landing/go/coupang/`입니다. `main`에 푸시하면 GitHub Pages가 배포합니다. 새 배포와 공개 파일을 확인한 뒤 프로필 링크로 사용하세요. 실제 휴대폰의 틱톡 앱 안에서 상품 선택·쿠팡 연결은 별도 확인이 필요합니다.
